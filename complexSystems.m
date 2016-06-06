@@ -1,33 +1,34 @@
 clear; close; clc;
 
-groupSize  = 10;  % group size
+N_list     = 10;  % group size
 finalTime  = 10;  % simulation time
 w          = 0.5; % weight factor
 s          = 0.5; % speed constant
 dt         = 0.1; % time step
 
-% position
-Cx = zeros(groupSize, finalTime); % horizontal position x-axis
-Cy = zeros(groupSize, finalTime); % vertical   position y-axis
-
-% distance 
-Dx = zeros(groupSize, finalTime); % horizontal distance 
-Dy = zeros(groupSize, finalTime); % vertical   distance
-
 % repetitions
-numReps = 50; % # of repetitions
+numReps = 50; % number of repetitions
 
-% parallel/serial version ?  (uncomment to use)
+% parallel/seworkInProgressrial version ?  (uncomment to use)
 % workingVersion();
 
+
+tic % time start 
+disp('simulation start...');
 % start iterating
-parfor N=1:groupSize  % individuals
+parfor N=1:N_list   % size
+    % set all in function eventually for parallelization ! 
+            
+    simulateThis(finalTime, N);
+        
     
-    
-    
-end  % individuals
-
-
+end                        % size
+disp('...simulation end');
+toc % time lapsed 
 
 % session is over
 delete(gcp);
+
+
+
+

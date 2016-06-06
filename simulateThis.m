@@ -1,4 +1,4 @@
-function out = simulateThis(finalTime, alpha, rho, N)
+function out = simulateThis(finalTime, alpha, rho, p, w, N)
 
 % position
 Cx = zeros(N, finalTime); % horizontal position 
@@ -23,8 +23,7 @@ Vy(:, 1) = rand(size( Vy(:, 1)) );
 
 for t=1:finalTime-1  % time 
     
-    
-    for i=1:N
+    for i=1:N   % individuals
         % distance check
         dist = getDistance(i, Cx, Cy, N);
 
@@ -42,8 +41,28 @@ for t=1:finalTime-1  % time
                                  Cx(:, t+1), Cy(:, t+1), ...
                                  Vx(:, t+1), Vy(:, t+1) );
 
+        end  % repel/attract condition
+        
+        % convert d to d^chapeau
+        Dx(i, t+1) = Dx(i, t+1)/abs(Dx(i, t+1));
+        Dy(i, t+1) = Dy(i, t+1)/abs(Dy(i, t+1)); 
+        
+        % update according to informed condition
+        if rand() < p 
+            % TODO: 
+            % figure out what is g
+            % update with g and test
+            % % % % % % % % % % % % % % % % % % % % % % % 
+            tempX = Dx(i, t+1) + w*g(i);
+            tempX = tempX/abs(tempX);
+            tempY = Dy(i, t+1) + w*g(i);
+            tempY = tempY/abs(tempY);
+            Dx(i, t+1) = tempX;
+            Dy(i, t+1) = tempY;
+
         end
-    end
+        
+    end         % individuals
     
 end                  % time
 

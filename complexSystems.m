@@ -9,18 +9,19 @@ dt         = 0.1; % time step
 % repetitions
 numReps = 50; % number of repetitions
 
-% parallel/seworkInProgressrial version ?  (uncomment to use)
+% parallel/serial version ?  (uncomment to use)
 % workingVersion();
 
 
 tic % time start 
 disp('simulation start...');
 % start iterating
-parfor N=1:N_list   % size
+parfor N=1:N_list          % size
     % set all in function eventually for parallelization ! 
-            
-    simulateThis(finalTime, N);
-        
+    
+    for r=1:numReps     % repetitions     
+        simulateThis(finalTime, N);
+    end                 % repetitions
     
 end                        % size
 disp('...simulation end');

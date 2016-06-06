@@ -63,5 +63,21 @@ for t=1:finalTime-1  % time
         
     end         % individuals
     
+    % update direction
+    temp = atan2( Dy(:, t+1), Dx(:, t+1) );
+    %
+    % TODO: 
+    % figure how to get a gaussian distribution
+    % about 0, standDeviation = 0.01
+    % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+    temp = temp + randomRotation; % guassian distribution
+    Dx(:, t+1) = cos(temp);
+    Dy(:, t+1) = sin(temp);
+    
 end                  % time
+
+
+
+
+
 

@@ -18,10 +18,10 @@ Dy = zeros(groupSize, finalTime); % vertical   distance
 numReps = 50; % # of repetitions
 
 % parallel/serial version ?  (uncomment to use)
-workingVersion();
+% workingVersion();
 
 % start iterating
-for N=1:groupSize  % individuals
+parfor N=1:groupSize  % individuals
     
     
     

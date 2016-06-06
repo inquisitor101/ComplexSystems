@@ -1,4 +1,5 @@
-function out = simulateThis(finalTime, alpha, rho, p, w, N)
+function out = simulateThis(finalTime, alpha, rho,...
+                            p, w, g, N, maxInformed)
 
 % position
 Cx = zeros(N, finalTime); % horizontal position 
@@ -47,19 +48,17 @@ for t=1:finalTime-1  % time
         Dx(i, t+1) = Dx(i, t+1)/abs(Dx(i, t+1));
         Dy(i, t+1) = Dy(i, t+1)/abs(Dy(i, t+1)); 
         
-        % update according to informed condition
-        if rand() < p 
-            % TODO: 
-            % figure out what is g
-            % update with g and test
-            % % % % % % % % % % % % % % % % % % % % % % % 
-            tempX = Dx(i, t+1) + w*g(i);
+        % update informed individuals
+        if i <= maxInformed 
+            % assume first 'maxInformed' are the 
+            % informed individuals for simplicity 
+            % and book-keeping purposes.
+            tempX = Dx(i, t+1) + w*g(1);
             tempX = tempX/abs(tempX);
-            tempY = Dy(i, t+1) + w*g(i);
+            tempY = Dy(i, t+1) + w*g(2);
             tempY = tempY/abs(tempY);
             Dx(i, t+1) = tempX;
             Dy(i, t+1) = tempY;
-
         end
         
     end         % individuals

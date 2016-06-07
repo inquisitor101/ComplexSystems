@@ -1,6 +1,6 @@
 clear; close; clc;
 
-finalTime   = 10 ; % simulation time
+finalTime   = 100; % simulation time
 alpha       = 0.5; % repulsion  distance 
 rho         = 2.0; % attraction distance 
 w           = 0.5; % weight factor
@@ -17,7 +17,7 @@ N_list     = (1:10)';      % group size list
 p_list     = (0:0.1:1.0)'; % proportion list
 
 % repetitions
-numReps = 10; % number of repetitions
+numReps = 1; % number of repetitions
 
 % parallel/serial version ?  (uncomment to use)
 % workingVersion();

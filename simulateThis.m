@@ -85,10 +85,20 @@ for t=1:finalTime-1  % time
     % update position
     Cx(:, t+1) = Cx(:, t) + Vx(:, t+1).*s*dt;
     Cy(:, t+1) = Cy(:, t) + Vy(:, t+1).*s*dt;
-    
+   
+   for i=1:N
+       L = 1;
+       plot([Cx(i, t), Cx(i, t+1)], [Cy(i, t), Cy(i, t+1)], 'b-','markersize',4)
+       axis([0 L 0 L]);
+       hold on
+       plot(Cx(i, t+1), Cy(i, t+1), 'r.', 'markersize', 10)
+       xlabel('X position')
+       ylabel('Y position')
+   end
+   getframe();
+   pause(0.2); hold off
 end                  % time
 
-
-
+clf();
 
 

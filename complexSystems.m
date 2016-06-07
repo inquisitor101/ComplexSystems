@@ -1,6 +1,6 @@
 clear; close; clc;
 
-finalTime   = 100; % simulation time
+finalTime   = 10; % simulation time
 alpha       = 0.5; % repulsion  distance 
 rho         = 2.0; % attraction distance 
 w           = 0.5; % weight factor

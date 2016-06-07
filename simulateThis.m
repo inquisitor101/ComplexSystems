@@ -1,5 +1,19 @@
-function out = simulateThis(finalTime, alpha, rho,...
-                            s, dt, p, w, g, N)
+% function out = simulateThis(finalTime, alpha, rho,...
+%                             s, dt, p, w, g, N)
+
+% % % % % % % % % % % % % % % % % % % % % % % % %
+finalTime   = 100; % simulation time
+alpha       = 0.5; % repulsion  distance 
+rho         = 2.0; % attraction distance 
+w           = 0.5; % weight factor
+s           = 0.5; % speed constant
+dt          = 0.1; % time step
+g           = [0; 1];
+N           = 30;
+p           = 0.1;
+maxInformed = N*p;
+L           = 1;
+% % % % % % % % % % % % % % % % % % % % % % % % %
 
 % position
 Cx = zeros(N, finalTime); % horizontal position 
@@ -26,22 +40,27 @@ maxInformed = N*p;
 for t=1:finalTime-1  % time 
     
     for i=1:N   % individuals
-        % distance check
-        dist = getDistance(i, Cx(:, t), Cy(:, t), N);
-
-        idx = dist < alpha;
-        % repel
-        [Dx(idx, t+1), Dy(idx, t+1)] = ...
-            repelNeighbors  (idx, i, ...
-                             Cx(:, t), Cy(:, t) );
-        % attract     
-        idx2 = imcomplement(idx);
-        idx2 = abs(idx - idx2);
-        [Dx(idx2, t+1), Dy(idx2, t+1)] = ...
-            attractNeighbors(idx2, i, ...
-                             Cx(:, t), Cy(:, t), ...
-                             Vx(:, t), Vy(:, t) );
         
+        A = getDistance(i, L, Cx(:, t), Cy(:, t), N);
+        
+        t1 = nanmin(A);
+        dist = sort(t1)';       % sorted distance
+        idx  = dist <= alpha;   % repeled indices
+        idx2 = dist <= rho;     % attract indices
+        idx2 = abs(idx - idx2); 
+        
+        % repel
+        if sum(idx) ~= 0
+            [Dx(idx, t+1), Dy(idx, t+1)] = ...
+                repelNeighbors  (idx, i, ...
+                                 Cx(:, t), Cy(:, t) );
+        else
+        % attract     
+%             [Dx(idx2, t+1), Dy(idx2, t+1)] = ...
+%                 attractNeighbors(idx2, i, ...
+%                                  Cx(:, t), Cy(:, t), ...
+%                                  Vx(:, t), Vy(:, t) );
+        end
         % convert d to d^chapeau
         Dx(i, t+1) = Dx(i, t+1)/abs(Dx(i, t+1));
         Dy(i, t+1) = Dy(i, t+1)/abs(Dy(i, t+1)); 
@@ -85,15 +104,22 @@ for t=1:finalTime-1  % time
     % update position
     Cx(:, t+1) = Cx(:, t) + Vx(:, t+1).*s*dt;
     Cy(:, t+1) = Cy(:, t) + Vy(:, t+1).*s*dt;
-   
-   for i=1:N
+    
+    Cx(:, t+1) = mod( Cx(:, t+1), L);
+    Cy(:, t+1) = mod( Cy(:, t+1), L);
+    % plot
+    for i=1:N
        L = 1;
-       plot([Cx(i, t), Cx(i, t+1)], [Cy(i, t), Cy(i, t+1)], 'b-','markersize',4)
-       axis([0 L 0 L]);
-       hold on
-       plot(Cx(i, t+1), Cy(i, t+1), 'r.', 'markersize', 10)
-       xlabel('X position')
-       ylabel('Y position')
+       idx_x = abs( Cx(i, t+1) - Cx(i, t) );
+       idx_y = abs( Cy(i, t+1) - Cy(i, t) );
+       if idx_x < 0.8 && idx_y < 0.8
+           plot([Cx(i, t), Cx(i, t+1)], [Cy(i, t), Cy(i, t+1)], 'b-','markersize',4)
+           axis([0 L 0 L]);
+           hold on
+           plot(Cx(i, t+1), Cy(i, t+1), 'r.', 'markersize', 10)
+           xlabel('X position')
+           ylabel('Y position')
+       end
    end
    getframe();
    pause(0.2); hold off

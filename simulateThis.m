@@ -2,7 +2,7 @@
 %                             s, dt, p, w, g, N)
 
 % % % % % % % % % % % % % % % % % % % % % % % % %
-finalTime   = 100; % simulation time
+finalTime   = 10; % simulation time
 alpha       = 0.5; % repulsion  distance 
 rho         = 2.0; % attraction distance 
 w           = 0.5; % weight factor
@@ -54,16 +54,22 @@ for t=1:finalTime-1  % time
             [Dx(idx, t+1), Dy(idx, t+1)] = ...
                 repelNeighbors  (idx, i, ...
                                  Cx(:, t), Cy(:, t) );
-        else
+        elseif sum(idx2) ~= 0
         % attract     
-%             [Dx(idx2, t+1), Dy(idx2, t+1)] = ...
-%                 attractNeighbors(idx2, i, ...
-%                                  Cx(:, t), Cy(:, t), ...
-%                                  Vx(:, t), Vy(:, t) );
+            [Dx(idx2, t+1), Dy(idx2, t+1)] = ...
+                attractNeighbors(idx2, i, ...
+                                 Cx(:, t), Cy(:, t), ...
+                                 Vx(:, t), Vy(:, t) );
         end
+        
         % convert d to d^chapeau
-        Dx(i, t+1) = Dx(i, t+1)/abs(Dx(i, t+1));
-        Dy(i, t+1) = Dy(i, t+1)/abs(Dy(i, t+1)); 
+        % make sure not to divide by zero !! 
+        if Dx(i, t+1) ~= 0 
+            Dx(i, t+1) = Dx(i, t+1)/abs(Dx(i, t+1));
+        end
+        if Dy(i, t+1) ~= 0
+            Dy(i, t+1) = Dy(i, t+1)/abs(Dy(i, t+1));
+        end
         
         % update informed individuals
         if i <= maxInformed 
@@ -85,19 +91,22 @@ for t=1:finalTime-1  % time
     % guassian distribution
     randomRotation = gaussianDist([-1, +1], 0.01, N);
     temp = temp + randomRotation; 
-    Dx(:, t+1) = cos(temp);
-    Dy(:, t+1) = sin(temp);
+    
+    Dx(:, t+1) = cos(temp); % horizontal location
+    Dy(:, t+1) = sin(temp); % vertical   location
     
     % update direction
-    Dangle = atan2(Dy(:, t+1), Dx(:, t+1));
-    Vangle = atan2(Vy(:, t), Vx(:, t));
-    theta  = atan2(Cy(:, t), Cx(:, t));
-    % check condition
-    idx = (Vangle-Dangle) < theta*dt;
-    sgn = sign(Vangle-Dangle);
+    Dangle = atan2(Dy(:, t+1), Dx(:, t+1)); % desired   angle
+    Vangle = atan2(Vy(:, t), Vx(:, t));     % direction angle
+    theta  = atan2(Cy(:, t), Cx(:, t));     % distance  angle
+
+    idx = (Vangle-Dangle) < theta*dt; % check condition
+    sgn = sign(Vangle-Dangle);        % orientation sense
+    % condition near ( difference < theta * dt ) 
     Vx(idx, t+1) = Dx(idx, t+1);
     Vy(idx, t+1) = Dy(idx, t+1);
-    idx2 = imcomplement(idx);
+    idx2 = imcomplement(idx);   % implement else condition
+    % condition far  ( difference > theta * dt )
     Vx(idx2, t+1) = Vx(idx2, t) + sgn(idx2).*theta(idx2).*dt;
     Vy(idx2, t+1) = Vy(idx2, t) + sgn(idx2).*theta(idx2).*dt;
     
@@ -105,8 +114,10 @@ for t=1:finalTime-1  % time
     Cx(:, t+1) = Cx(:, t) + Vx(:, t+1).*s*dt;
     Cy(:, t+1) = Cy(:, t) + Vy(:, t+1).*s*dt;
     
+    % apply periodic boundaries (torus-like)
     Cx(:, t+1) = mod( Cx(:, t+1), L);
     Cy(:, t+1) = mod( Cy(:, t+1), L);
+    
     % plot
     for i=1:N
        L = 1;
@@ -120,7 +131,8 @@ for t=1:finalTime-1  % time
            xlabel('X position')
            ylabel('Y position')
        end
-   end
+    end
+   % let's check things out 
    getframe();
    pause(0.2); hold off
 end                  % time

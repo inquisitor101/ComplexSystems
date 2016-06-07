@@ -1,21 +1,16 @@
-function [Dx, Dy] = attractNeighbors(N, i, Cx, Cy, Vx, Vy)
+function [Dx, Dy] = attractNeighbors(idx2, i, Cx, Cy, Vx, Vy)
 
 
-dx = 0; dy = 0;  % reset
-for j=1:i-1  % unroll loop 
-    tempX = Cx(j) - Cx(i);
-    tempY = Cy(j) - Cy(j); 
-    dx = dx + tempX/abs(tempX); % normalized X
-    dy = dy + tempY/abs(tempY); % normalized Y
-end
-for j=i+1:N  % unroll loop 
-    tempX = Cx(j) - Cx(i);
-    tempY = Cy(j) - Cy(j); 
-    dx = dx + tempX/abs(tempX); % normalized X
-    dy = dy + tempY/abs(tempY); % normalized Y
-end
+tempX = Cx(idx2) - Cx(i);
+tempY = Cy(idx2) - Cy(i);
+dx = tempX./abs(tempX);
+dy = tempY./abs(tempY);
+% % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% TODO: 
+% Vx(1)/abs(Vx(1))    ... doesn't make sense 
+% double check if its always index = 1 1?!?!?!?
+Dx = dx + Vx(1)/abs(Vx(1));
+Dy = dy + Vy(1)/abs(Vy(1));
 
-% update contributions
-Dx = dx + Vx(1, 1)/abs(Vx(1)); 
-Dy = dy + Vy(1, 1)/abs(Vy(1));
+
 

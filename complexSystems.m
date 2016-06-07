@@ -6,7 +6,6 @@ rho         = 2.0; % attraction distance
 w           = 0.5; % weight factor
 s           = 0.5; % speed constant
 dt          = 0.1; % time step
-maxInformed = 10 ; % number of informed individuals
 
 % direction preference, properties:
 % g(1): horizontal  (x-axis) 
@@ -35,7 +34,7 @@ parfor N=1:length(N_list)      % size
         p = p_list(p_idx);
         for r=1:numReps        % repetitions     
             simulateThis(finalTime, alpha, rho,...
-                         p, w, g, N, maxInformed);
+                         s, dt, p, w, g, N);
         end                    % repetitions
     end                        % proportion
     

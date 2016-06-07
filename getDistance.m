@@ -11,5 +11,5 @@ end
 for j=i+1:N
     x = Cx(i) - Cx(j);
     y = Cy(i) - Cy(j);
-    dist(j) = sqrt( x*x + y*y );
+    dist(j-1) = sqrt( x*x + y*y );
 end

@@ -1,18 +1,21 @@
 % function out = simulateThis(finalTime, alpha, rho,...
-%                             s, dt, p, w, g, N)
+%                             s, dt, p, w, g, N, ...
+%                             isAnime, pauseTime)
 
 % % % % % % % % % % % % % % % % % % % % % % % % %
-finalTime   = 10; % simulation time
+finalTime   = 100; % simulation time
 alpha       = 0.5; % repulsion  distance 
 rho         = 2.0; % attraction distance 
 w           = 0.5; % weight factor
 s           = 0.5; % speed constant
 dt          = 0.1; % time step
-g           = [0; 1];
+g           = [0; 0];
 N           = 30;
 p           = 0.1;
 maxInformed = N*p;
-L           = 1;
+L           = 10;
+pauseTime   = 0.1;
+isAnime     = 1;
 % % % % % % % % % % % % % % % % % % % % % % % % %
 
 % position
@@ -28,8 +31,8 @@ Dx = zeros(N, finalTime); % horizontal orientation
 Dy = zeros(N, finalTime); % vertical   orientation
 
 % initialize position  (randomly)
-Cx(:, 1) = rand(N, 1);
-Cy(:, 1) = rand(N, 1);
+Cx(:, 1) = L*rand(N, 1);
+Cy(:, 1) = L*rand(N, 1);
 % initialize direction (randomly)
 Vx(:, 1) = rand(N, 1);
 Vy(:, 1) = rand(N, 1);
@@ -47,7 +50,6 @@ for t=1:finalTime-1  % time
         dist = sort(t1)';       % sorted distance
         idx  = dist <= alpha;   % repeled indices
         idx2 = dist <= rho;     % attract indices
-        idx2 = abs(idx - idx2); 
         
         % repel
         if sum(idx) ~= 0
@@ -115,28 +117,50 @@ for t=1:finalTime-1  % time
     Cy(:, t+1) = Cy(:, t) + Vy(:, t+1).*s*dt;
     
     % apply periodic boundaries (torus-like)
-    Cx(:, t+1) = mod( Cx(:, t+1), L);
-    Cy(:, t+1) = mod( Cy(:, t+1), L);
+    Cx(:, t+1) = mod( Cx(:, t+1), L); % horizontal boundary
+    Cy(:, t+1) = mod( Cy(:, t+1), L); % vertical   boundary
     
     % plot
-    for i=1:N
-       L = 1;
-       idx_x = abs( Cx(i, t+1) - Cx(i, t) );
-       idx_y = abs( Cy(i, t+1) - Cy(i, t) );
-       if idx_x < 0.8 && idx_y < 0.8
-           plot([Cx(i, t), Cx(i, t+1)], [Cy(i, t), Cy(i, t+1)], 'b-','markersize',4)
-           axis([0 L 0 L]);
-           hold on
-           plot(Cx(i, t+1), Cy(i, t+1), 'r.', 'markersize', 10)
-           xlabel('X position')
-           ylabel('Y position')
-       end
+    if isAnime
+        for i=1:maxInformed
+           idx_x = abs( Cx(i, t+1) - Cx(i, t) );
+           idx_y = abs( Cy(i, t+1) - Cy(i, t) );
+           if idx_x < 0.5*L && idx_y < 0.5*L
+               plot([Cx(i, t), Cx(i, t+1)], [Cy(i, t), Cy(i, t+1)], 'r-','markersize',4)
+               axis([0 L 0 L]);
+               hold on
+               plot(Cx(i, t+1), Cy(i, t+1), 'r.', 'markersize', 10)
+               xlabel('X position')
+               ylabel('Y position')
+               title(['time: ',num2str(t), ...
+               '   informed (red): ',num2str(maxInformed)]);
+           end
+        end
+        for i=maxInformed+1:N
+           idx_x = abs( Cx(i, t+1) - Cx(i, t) );
+           idx_y = abs( Cy(i, t+1) - Cy(i, t) );
+           if idx_x < 0.5*L && idx_y < 0.5*L
+               plot([Cx(i, t), Cx(i, t+1)], ...
+                    [Cy(i, t), Cy(i, t+1)], ...
+                    'b-','markersize',4)
+               axis([0 L 0 L]);
+               hold on
+               plot(Cx(i, t+1), Cy(i, t+1), 'b.', 'markersize', 10)
+               xlabel('X position')
+               ylabel('Y position')
+               title(['time: ',num2str(t), ...
+               '   informed (red): ',num2str(maxInformed)]);
+           end
+        end
     end
    % let's check things out 
-   getframe();
-   pause(0.2); hold off
+   if isAnime
+       getframe();
+       pause(pauseTime); hold off
+   end
 end                  % time
 
-clf();
-
+if isAnime
+    clf(); % clear figure 
+end
 

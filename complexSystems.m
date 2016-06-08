@@ -1,11 +1,13 @@
 clear; close; clc;
 
-finalTime   = 10; % simulation time
+finalTime   = 100; % simulation time
 alpha       = 0.5; % repulsion  distance 
 rho         = 2.0; % attraction distance 
 w           = 0.5; % weight factor
 s           = 0.5; % speed constant
 dt          = 0.1; % time step
+pauseTime   = 0.1; % pause time per animation
+isAnime     = 0  ; % animate results ? 1: ON, 0: OFF
 
 % direction preference, properties:
 % g(1): horizontal  (x-axis) 
@@ -34,14 +36,14 @@ parfor N=1:length(N_list)      % size
         p = p_list(p_idx);
         for r=1:numReps        % repetitions     
             simulateThis(finalTime, alpha, rho,...
-                         s, dt, p, w, g, N);
+                         s, dt, p, w, g, N, ...
+                         isAnime, pauseTime);
         end                    % repetitions
     end                        % proportion
     
 end                            % size
 disp('...simulation end');
 toc % time lapsed 
-
 
 
 % session is over

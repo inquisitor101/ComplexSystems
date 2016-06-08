@@ -40,6 +40,11 @@ Vy(:, 1) = rand(N, 1);
 % max number of informed individuals ~ p
 maxInformed = N*p;
  
+% check p condition
+if p > 1 || p < 0
+    error('proportion must obey condition: 0.0 <= p <= 1.0');
+end
+
 for t=1:finalTime-1  % time 
     
     for i=1:N   % individuals
@@ -126,10 +131,13 @@ for t=1:finalTime-1  % time
            idx_x = abs( Cx(i, t+1) - Cx(i, t) );
            idx_y = abs( Cy(i, t+1) - Cy(i, t) );
            if idx_x < 0.5*L && idx_y < 0.5*L
-               plot([Cx(i, t), Cx(i, t+1)], [Cy(i, t), Cy(i, t+1)], 'r-','markersize',4)
+               plot([Cx(i, t), Cx(i, t+1)], ...
+                    [Cy(i, t), Cy(i, t+1)], ...
+                    'r-','markersize',4)
                axis([0 L 0 L]);
                hold on
-               plot(Cx(i, t+1), Cy(i, t+1), 'r.', 'markersize', 10)
+               plot(Cx(i, t+1), Cy(i, t+1), 'r.', ...
+                       'markersize', 10)
                xlabel('X position')
                ylabel('Y position')
                title(['time: ',num2str(t), ...
@@ -145,7 +153,8 @@ for t=1:finalTime-1  % time
                     'b-','markersize',4)
                axis([0 L 0 L]);
                hold on
-               plot(Cx(i, t+1), Cy(i, t+1), 'b.', 'markersize', 10)
+               plot(Cx(i, t+1), Cy(i, t+1), 'b.', ...
+                    'markersize', 10)
                xlabel('X position')
                ylabel('Y position')
                title(['time: ',num2str(t), ...

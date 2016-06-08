@@ -5,12 +5,18 @@ tempX = Cx(idx2) - Cx(i);
 tempY = Cy(idx2) - Cy(i);
 dx = tempX./abs(tempX);
 dy = tempY./abs(tempY);
-% % % % % % % % % % % % % % % % % % % % % % % % % % % 
-% TODO: 
-% Vx(1)/abs(Vx(1))    ... doesn't make sense 
-% double check if its always index = 1 1?!?!?!?
-Dx = dx + Vx(1)/abs(Vx(1));
-Dy = dy + Vy(1)/abs(Vy(1));
+% correct for case division by zero 
+dx(isnan(dx)) = 0;
+dy(isnan(dy)) = 0;
+
+tempX = Vx./abs(Vx);
+tempY = Vy./abs(Vy);
+
+dv_x = sum(tempX);
+dv_y = sum(tempY);
+
+Dx = dx + dv_x;
+Dy = dy + dv_y;
 
 
 

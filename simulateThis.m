@@ -7,14 +7,14 @@ clear; close; clc;
 finalTime   = 100; % simulation time
 alpha       = 1.0; % repulsion  distance 
 rho         = 2.0; % attraction distance 
-w           = 0.5; % weight factor
-s           = 0.5; % speed constant
+w           = 1.0; % weight factor
+s           = 1.0; % speed constant
 dt          = 0.1; % time step
-g           = [0; 0];
-N           = 30;
+g           = [1; 0];
+N           = 10;
 p           = 0.1;
 maxInformed = N*p;
-L           = 10;
+L           = 2;
 pauseTime   = 0.05;
 isAnime     = 1;
 % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -84,12 +84,19 @@ for t=1:finalTime-1  % time
             % assume first 'maxInformed' are the 
             % informed individuals for simplicity 
             % and book-keeping purposes.
-            tempX = Dx(i, t+1) + w*g(1);
-            tempX = tempX/abs(tempX);
-            tempY = Dy(i, t+1) + w*g(2);
-            tempY = tempY/abs(tempY);
-            Dx(i, t+1) = tempX;
-            Dy(i, t+1) = tempY;
+            
+            % zero division condition
+            if Dx(i, t+1) ~= 0
+                tempX = Dx(i, t+1) + w*g(1);
+                tempX = tempX/abs(tempX);
+                Dx(i, t+1) = tempX;
+            end
+            % zero division condition
+            if Dy(i, t+1) ~= 0
+                tempY = Dy(i, t+1) + w*g(2);
+                tempY = tempY/abs(tempY);
+                Dy(i, t+1) = tempY;
+            end
         end
         
     end         % individuals

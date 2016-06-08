@@ -3,8 +3,9 @@
 %                             isAnime, pauseTime)
 
 % % % % % % % % % % % % % % % % % % % % % % % % %
+clear; close; clc;
 finalTime   = 100; % simulation time
-alpha       = 0.5; % repulsion  distance 
+alpha       = 1.0; % repulsion  distance 
 rho         = 2.0; % attraction distance 
 w           = 0.5; % weight factor
 s           = 0.5; % speed constant
@@ -14,7 +15,7 @@ N           = 30;
 p           = 0.1;
 maxInformed = N*p;
 L           = 10;
-pauseTime   = 0.1;
+pauseTime   = 0.05;
 isAnime     = 1;
 % % % % % % % % % % % % % % % % % % % % % % % % %
 
@@ -147,6 +148,7 @@ for t=1:finalTime-1  % time
         for i=maxInformed+1:N
            idx_x = abs( Cx(i, t+1) - Cx(i, t) );
            idx_y = abs( Cy(i, t+1) - Cy(i, t) );
+           
            if idx_x < 0.5*L && idx_y < 0.5*L
                plot([Cx(i, t), Cx(i, t+1)], ...
                     [Cy(i, t), Cy(i, t+1)], ...
@@ -164,6 +166,12 @@ for t=1:finalTime-1  % time
     end
    % let's check things out 
    if isAnime
+       % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+       % debugging here (remove) ------------------------------
+       weird = sum(isnan(Cx(:, t+1)));
+       legend(['# NaN: ',num2str(weird)]);    
+       % debugging here (remove) ------------------------------
+       % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
        getframe();
        pause(pauseTime); hold off
    end

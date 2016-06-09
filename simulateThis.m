@@ -5,7 +5,7 @@
 % % % % % % % % % % % % % % % % % % % % % % % % %
 clear; close; clc;
 finalTime   = 100; % simulation time
-alpha       = 1.0; % repulsion  distance 
+alpha       = 0.5; % repulsion  distance 
 rho         = 2.0; % attraction distance 
 w           = 1.0; % weight factor
 s           = 1.0; % speed constant
@@ -66,24 +66,23 @@ for t=1:finalTime-1  % time
         
         % repel
         if sum(idx) ~= 0
-            [Dx(idx, t+1), Dy(idx, t+1)] = ...
+            [Dx(i, t+1), Dy(i, t+1)] = ...
                 repelNeighbors  (idx, i, ...
                                  Cx(:, t), Cy(:, t) );
         elseif sum(idx2) ~= 0
         % attract     
-            [Dx(idx2, t+1), Dy(idx2, t+1)] = ...
+            [Dx(i, t+1), Dy(i, t+1)] = ...
                 attractNeighbors(idx2, i, ...
                                  Cx(:, t), Cy(:, t), ...
                                  Vx(:, t), Vy(:, t) );
         end
         
         % convert d to d^chapeau
-        % make sure not to divide by zero !! 
-        if Dx(i, t+1) ~= 0 
-            Dx(i, t+1) = Dx(i, t+1)/abs(Dx(i, t+1));
-        end
-        if Dy(i, t+1) ~= 0
-            Dy(i, t+1) = Dy(i, t+1)/abs(Dy(i, t+1));
+        % make sure not to divide by zero !!
+        d = sqrt(Dx(i, t+1).^2 + Dy(i, t+1).^2);
+        if d ~= 0 
+            Dx(i, t+1) = Dx(i, t+1)/d;
+            Dy(i, t+1) = Dy(i, t+1)/d;
         end
         
         % update informed individuals
@@ -92,17 +91,13 @@ for t=1:finalTime-1  % time
             % informed individuals for simplicity 
             % and book-keeping purposes.
             
+            tempX = Dx(i, t+1) + w*g(1);
+            tempY = Dy(i, t+1) + w*g(2);
+            d = sqrt(tempX.^2 + tempY.^2);
             % zero division condition
-            if Dx(i, t+1) ~= 0
-                tempX = Dx(i, t+1) + w*g(1);
-                tempX = tempX/abs(tempX);
-                Dx(i, t+1) = tempX;
-            end
-            % zero division condition
-            if Dy(i, t+1) ~= 0
-                tempY = Dy(i, t+1) + w*g(2);
-                tempY = tempY/abs(tempY);
-                Dy(i, t+1) = tempY;
+            if d ~= 0
+                Dx(i, t+1) = tempX/d;
+                Dy(i, t+1) = tempY/d;
             end
         end
         

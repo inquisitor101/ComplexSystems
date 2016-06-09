@@ -3,20 +3,17 @@ function [Dx, Dy] = attractNeighbors(idx2, i, Cx, Cy, Vx, Vy)
 
 tempX = Cx(idx2) - Cx(i);
 tempY = Cy(idx2) - Cy(i);
-dx = tempX./abs(tempX);
-dy = tempY./abs(tempY);
+dx = tempX./sqrt(tempX.^2 + tempY.^2);
+dy = tempY./sqrt(tempX.^2 + tempY.^2);
 % correct for case division by zero 
 dx(isnan(dx)) = 0;
 dy(isnan(dy)) = 0;
 
-tempX = Vx./abs(Vx);
-tempY = Vy./abs(Vy);
+dv_x = Vx./sqrt(Vx.^2 + Vy.^2);
+dv_y = Vy./sqrt(Vx.^2 + Vy.^2);
 
-dv_x = sum(tempX);
-dv_y = sum(tempY);
-
-Dx = dx + dv_x;
-Dy = dy + dv_y;
+Dx = sum(dx) + sum(dv_x);
+Dy = sum(dy) + sum(dv_y);
 
 
 

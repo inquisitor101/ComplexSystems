@@ -1,5 +1,6 @@
 function [Dx, Dy] = attractNeighbors(idx2, i, Cx, Cy, Vx, Vy)
 
+idx2(idx2 == i) = 0; % make sure exclude self 
 
 tempX = Cx(idx2) - Cx(i);
 tempY = Cy(idx2) - Cy(i);
@@ -14,6 +15,5 @@ dv_y = Vy./sqrt(Vx.^2 + Vy.^2);
 
 Dx = sum(dx) + sum(dv_x);
 Dy = sum(dy) + sum(dv_y);
-
 
 

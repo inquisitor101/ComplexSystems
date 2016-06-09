@@ -5,17 +5,17 @@
 % % % % % % % % % % % % % % % % % % % % % % % % %
 clear; close; clc;
 finalTime   = 100; % simulation time
-alpha       = 0.5; % repulsion  distance 
-rho         = 2.0; % attraction distance 
+alpha       = 1.0; % repulsion  distance 
+rho         = 3.0; % attraction distance 
 w           = 1.0; % weight factor
-s           = 1.0; % speed constant
+s           = 0.5; % speed constant
 dt          = 0.1; % time step
 g           = [1; 0];
 N           = 10;
 p           = 0.1;
 maxInformed = N*p;
-L           = 2;
-pauseTime   = 0.05;
+L           = 10;
+pauseTime   = 1.0;
 isAnime     = 1;
 % % % % % % % % % % % % % % % % % % % % % % % % %
 
@@ -32,19 +32,21 @@ Dx = zeros(N, finalTime); % horizontal orientation
 Dy = zeros(N, finalTime); % vertical   orientation
 
 % centroid location of the whole group (N)
-groupCentroidX = zeros(finalTime);
-groupCentroidY = zeros(finalTime);
+groupCentroidX = zeros(finalTime, 1);
+groupCentroidY = zeros(finalTime, 1);
+% group direction
+h              = zeros(finalTime, 1);
 
 % initialize position  (randomly)
-Cx(:, 1) = L*rand(N, 1);
-Cy(:, 1) = L*rand(N, 1);
+Cx(:, 1) = 0.25*L*rand(N, 1)+0.375*L;
+Cy(:, 1) = 0.25*L*rand(N, 1)+0.375*L;
 % initialize direction (randomly)
-Vx(:, 1) = rand(N, 1);
-Vy(:, 1) = rand(N, 1);
+Vx(:, 1) = 2*pi*rand(N, 1);
+Vy(:, 1) = 2*pi*rand(N, 1);
 
 % initial step (t = 1)
-groupCentroidX = mean(Cx(:, 1));
-groupCentroidY = mean(Cy(:, 1));
+groupCentroidX(1) = mean(Cx(:, 1));
+groupCentroidY(1) = mean(Cy(:, 1));
 
 % max number of informed individuals ~ p
 maxInformed = N*p;
@@ -141,6 +143,10 @@ for t=1:finalTime-1  % time
     groupCentroidX(t+1) = mean(Cx(:, t+1)); % horizontal center
     groupCentroidY(t+1) = mean(Cy(:, t+1)); % vertical   center
     
+    % group direction
+    h(t+1) = atan2(groupCentroidY(t+1) - groupCentroidY(t),...
+                   groupCentroidX(t+1) - groupCentroidX(t));
+
     % plot
     if isAnime
         for i=1:maxInformed
@@ -157,7 +163,8 @@ for t=1:finalTime-1  % time
                xlabel('X position')
                ylabel('Y position')
                title(['time: ',num2str(t), ...
-               '   informed (red): ',num2str(maxInformed)]);
+               '   informed (red): ',num2str(maxInformed), ... 
+               ' h: ',num2str(rad2deg(h(t+1)))]);
            end
         end
         for i=maxInformed+1:N
@@ -175,16 +182,21 @@ for t=1:finalTime-1  % time
                xlabel('X position')
                ylabel('Y position')
                title(['time: ',num2str(t), ...
-               '   informed (red): ',num2str(maxInformed)]);
+               '   informed (red): ',num2str(maxInformed), ...
+               ' h: ', num2str(rad2deg(h(t+1))) ]);
            end
         end
+        quiver(groupCentroidX(t), groupCentroidY(t), ...
+            groupCentroidX(t+1) - groupCentroidX(t), ...
+            groupCentroidY(t+1) - groupCentroidY(t), ...
+             'k', 'MaxHeadSize', 1.0)
     end
    % let's check things out 
    if isAnime
        % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
        % debugging here (remove) ------------------------------
        weird = sum(isnan(Cx(:, t+1)));
-       legend(['# NaN: ',num2str(weird)]);    
+       legend(['direction: ', num2str(rad2deg(h(t+1)))]);    
        % debugging here (remove) ------------------------------
        % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
        getframe();

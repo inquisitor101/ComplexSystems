@@ -10,13 +10,14 @@ rho         = 3.0; % attraction distance
 w           = 1.0; % weight factor
 s           = 0.5; % speed constant
 dt          = 0.1; % time step
-g           = [1; 0];
+g           = [1; 1];
 N           = 100;
-p           = 0.5;
+p           = 0.1;
 maxInformed = N*p;
 L           = 10;
 pauseTime   = 1.0;
 isAnime     = 0;
+isPeriodic  = 1;
 % % % % % % % % % % % % % % % % % % % % % % % % %
 
 % position
@@ -36,8 +37,6 @@ groupCentroidX = zeros(finalTime, 1);
 groupCentroidY = zeros(finalTime, 1);
 % group direction
 h              = zeros(finalTime, 1);
-% elongation
-elong          = zeros(finalTime, 1);
 
 % initialize position  (randomly)
 Cx(:, 1) = 0.25*L*rand(N, 1)+0.375*L;
@@ -64,7 +63,11 @@ for t=1:finalTime-1  % time
         
         A = getDistance(i, L, Cx(:, t), Cy(:, t), N);
         
-        dist = nanmin(A);
+        if isPeriodic 
+            dist = nanmin(A);
+        else
+            dist = sqrt(Cx(:,t).^2 + Cy(:,t).^2);
+        end
         idx  = dist <= alpha;   % repeled indices
         idx2 = dist <= rho;     % attract indices
         
@@ -138,8 +141,10 @@ for t=1:finalTime-1  % time
     Cy(:, t+1) = Cy(:, t) + Vy(:, t+1)*s*dt;
     
     % apply periodic boundaries (torus-like)
-    Cx(:, t+1) = mod( Cx(:, t+1), L); % horizontal boundary
-    Cy(:, t+1) = mod( Cy(:, t+1), L); % vertical   boundary
+    if isPeriodic
+        Cx(:, t+1) = mod( Cx(:, t+1), L); % horizontal boundary
+        Cy(:, t+1) = mod( Cy(:, t+1), L); % vertical   boundary
+    end
     
     % group direction
     h(t+1) = atan2(mean(Cy(:, t+1)), mean(Cx(:, t+1)) );
@@ -147,8 +152,10 @@ for t=1:finalTime-1  % time
     % centroid 
     groupCentroidX(t+1) = mean(Cx(:, t+1)); % horizontal center
     groupCentroidY(t+1) = mean(Cy(:, t+1)); % vertical   center
-    elong(t+1) = boundingBox(Cx(:, t+1), Cy(:, t+1), h(t+1));
-
+    
+    % get elongation and bounding box
+    [bb, elong(t+1)] = boundingBox(Cx(:, t+1), Cy(:, t+1), h(t+1));
+    
     % plot
     if isAnime
         for i=1:maxInformed
@@ -188,14 +195,10 @@ for t=1:finalTime-1  % time
                ' h: ', num2str(rad2deg(h(t+1))) ]);
            end
         end
-%         quiver(groupCentroidX(t), groupCentroidY(t), ...
-%             groupCentroidX(t+1) - groupCentroidX(t), ...
-%             groupCentroidY(t+1) - groupCentroidY(t), ...
-%              'k', 'MaxHeadSize', 1.0)
-          quiver(groupCentroidX(t), groupCentroidY(t), ...
-            cos(h(t+1)), ...
-            sin(h(t+1)), ...
-             'k', 'MaxHeadSize', 1.0)
+        
+        quiver(groupCentroidX(t), groupCentroidY(t), ...
+               cos(h(t+1)), sin(h(t+1)), ...
+               'k', 'MaxHeadSize', 1.0 )
     end
    % let's check things out 
    if isAnime

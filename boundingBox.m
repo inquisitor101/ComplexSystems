@@ -1,7 +1,7 @@
-function elong = boundingBox(Cx, Cy, h_x, h_y)
+function elong = boundingBox(Cx, Cy, h)
 
 % direction of travel (w.r.t. centroid)
-groupDirection    = atan2(h_y, h_x);
+groupDirection    = h;
 % direction of travel of each particle/individual
 particleDirection = atan2(Cy, Cx);
 

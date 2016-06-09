@@ -139,13 +139,13 @@ for t=1:finalTime-1  % time
     Cx(:, t+1) = mod( Cx(:, t+1), L); % horizontal boundary
     Cy(:, t+1) = mod( Cy(:, t+1), L); % vertical   boundary
     
+    % group direction
+    h(t+1) = atan2(mean(Cy(:, t+1)), mean(Cx(:, t+1)) );
+    
     % centroid 
     groupCentroidX(t+1) = mean(Cx(:, t+1)); % horizontal center
     groupCentroidY(t+1) = mean(Cy(:, t+1)); % vertical   center
     
-    % group direction
-    h(t+1) = atan2(groupCentroidY(t+1) - groupCentroidY(t),...
-                   groupCentroidX(t+1) - groupCentroidX(t));
 
     % plot
     if isAnime
@@ -186,9 +186,13 @@ for t=1:finalTime-1  % time
                ' h: ', num2str(rad2deg(h(t+1))) ]);
            end
         end
-        quiver(groupCentroidX(t), groupCentroidY(t), ...
-            groupCentroidX(t+1) - groupCentroidX(t), ...
-            groupCentroidY(t+1) - groupCentroidY(t), ...
+%         quiver(groupCentroidX(t), groupCentroidY(t), ...
+%             groupCentroidX(t+1) - groupCentroidX(t), ...
+%             groupCentroidY(t+1) - groupCentroidY(t), ...
+%              'k', 'MaxHeadSize', 1.0)
+          quiver(groupCentroidX(t), groupCentroidY(t), ...
+            cos(h(t+1)), ...
+            sin(h(t+1)), ...
              'k', 'MaxHeadSize', 1.0)
     end
    % let's check things out 

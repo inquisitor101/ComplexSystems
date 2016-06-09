@@ -11,12 +11,12 @@ w           = 1.0; % weight factor
 s           = 0.5; % speed constant
 dt          = 0.1; % time step
 g           = [1; 0];
-N           = 10;
-p           = 0.1;
+N           = 100;
+p           = 0.5;
 maxInformed = N*p;
 L           = 10;
 pauseTime   = 1.0;
-isAnime     = 1;
+isAnime     = 0;
 % % % % % % % % % % % % % % % % % % % % % % % % %
 
 % position
@@ -36,6 +36,8 @@ groupCentroidX = zeros(finalTime, 1);
 groupCentroidY = zeros(finalTime, 1);
 % group direction
 h              = zeros(finalTime, 1);
+% elongation
+elong          = zeros(finalTime, 1);
 
 % initialize position  (randomly)
 Cx(:, 1) = 0.25*L*rand(N, 1)+0.375*L;
@@ -145,7 +147,7 @@ for t=1:finalTime-1  % time
     % centroid 
     groupCentroidX(t+1) = mean(Cx(:, t+1)); % horizontal center
     groupCentroidY(t+1) = mean(Cy(:, t+1)); % vertical   center
-    
+    elong(t+1) = boundingBox(Cx(:, t+1), Cy(:, t+1), h(t+1));
 
     % plot
     if isAnime
@@ -212,3 +214,6 @@ if isAnime
     clf(); % clear figure 
 end
 
+% elongation
+figure(2) 
+plot(elong)

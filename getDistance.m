@@ -1,7 +1,7 @@
 function dist = getDistance(i, L, Cx, Cy, N)
 
-
 A  = zeros(N, 9);   % 9 different position scenarios
+
 % difference between (N-1) and current position
 xR = Cx(i) - Cx(:);
 yR = Cy(i) - Cy(:);
@@ -16,6 +16,8 @@ A(:,7) = sqrt((xR+L).^2 + (yR-L).^2);
 A(:,8) = sqrt((xR-L).^2 + (yR+L).^2);
 A(:,9) = sqrt((xR-L).^2 + (yR-L).^2);
 
+% P.S. 
+% keep this so indexing is correct 
 A(i, :) = L; % L is max, so it will never affect solution
 
 dist = A';

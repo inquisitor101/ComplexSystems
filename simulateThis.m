@@ -31,12 +31,20 @@ Vy = zeros(N, finalTime); % vertical   direction
 Dx = zeros(N, finalTime); % horizontal orientation 
 Dy = zeros(N, finalTime); % vertical   orientation
 
+% centroid location of the whole group (N)
+groupCentroidX = zeros(finalTime);
+groupCentroidY = zeros(finalTime);
+
 % initialize position  (randomly)
 Cx(:, 1) = L*rand(N, 1);
 Cy(:, 1) = L*rand(N, 1);
 % initialize direction (randomly)
 Vx(:, 1) = rand(N, 1);
 Vy(:, 1) = rand(N, 1);
+
+% initial step (t = 1)
+groupCentroidX = mean(Cx(:, 1));
+groupCentroidY = mean(Cy(:, 1));
 
 % max number of informed individuals ~ p
 maxInformed = N*p;
@@ -110,28 +118,34 @@ for t=1:finalTime-1  % time
     Dx(:, t+1) = cos(temp); % horizontal location
     Dy(:, t+1) = sin(temp); % vertical   location
     
-    % update direction
+    % update direction: Vx and Vy
+    % step 1: get angles 
     Dangle = atan2(Dy(:, t+1), Dx(:, t+1)); % desired   angle
     Vangle = atan2(Vy(:, t), Vx(:, t));     % direction angle
     theta  = atan2(Cy(:, t), Cx(:, t));     % distance  angle
-
-    idx = (Vangle-Dangle) < theta*dt; % check condition
-    sgn = sign(Vangle-Dangle);        % orientation sense
+    % step 2: get indices of difference criteria
+    idx = abs(Vangle-Dangle) < theta*dt; % check condition
+    sgn = sign(Vangle-Dangle);           % orientation sense
+    % step 3: update accordingly !
     % condition near ( difference < theta * dt ) 
     Vx(idx, t+1) = Dx(idx, t+1);
     Vy(idx, t+1) = Dy(idx, t+1);
     idx2 = imcomplement(idx);   % implement else condition
     % condition far  ( difference > theta * dt )
-    Vx(idx2, t+1) = Vx(idx2, t) + sgn(idx2).*theta(idx2).*dt;
-    Vy(idx2, t+1) = Vy(idx2, t) + sgn(idx2).*theta(idx2).*dt;
+    Vx(idx2, t+1) = Vx(idx2, t) + sgn(idx2).*theta(idx2)*dt;
+    Vy(idx2, t+1) = Vy(idx2, t) + sgn(idx2).*theta(idx2)*dt;
     
     % update position
-    Cx(:, t+1) = Cx(:, t) + Vx(:, t+1).*s*dt;
-    Cy(:, t+1) = Cy(:, t) + Vy(:, t+1).*s*dt;
+    Cx(:, t+1) = Cx(:, t) + Vx(:, t+1)*s*dt;
+    Cy(:, t+1) = Cy(:, t) + Vy(:, t+1)*s*dt;
     
     % apply periodic boundaries (torus-like)
     Cx(:, t+1) = mod( Cx(:, t+1), L); % horizontal boundary
     Cy(:, t+1) = mod( Cy(:, t+1), L); % vertical   boundary
+    
+    % centroid 
+    groupCentroidX(t+1) = mean(Cx(:, t+1)); % horizontal center
+    groupCentroidY(t+1) = mean(Cy(:, t+1)); % vertical   center
     
     % plot
     if isAnime

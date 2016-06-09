@@ -28,7 +28,7 @@ numReps = 1; % number of repetitions
 tic % time start 
 disp('simulation start...');
 % start iterating
-parfor N=1:length(N_list)      % size
+for N=1:length(N_list)      % size
     
     % set all in/as function (eventually) for 
     % efficient parallelization ! 

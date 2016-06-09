@@ -60,8 +60,7 @@ for t=1:finalTime-1  % time
         
         A = getDistance(i, L, Cx(:, t), Cy(:, t), N);
         
-        t1 = nanmin(A);
-        dist = sort(t1)';       % sorted distance
+        dist = nanmin(A);
         idx  = dist <= alpha;   % repeled indices
         idx2 = dist <= rho;     % attract indices
         

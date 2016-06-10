@@ -4,7 +4,7 @@ function [elong] = simulation(finalTime, N, alpha, rho, w, s, dt, ...
 
 
 % total informed population
-maxInformed = N*p;
+maxInformed = round(N*p);
 % position
 Cx = zeros(N, finalTime); Cy = zeros(N, finalTime); 
 % direction vector 

@@ -1,6 +1,6 @@
 clear; close; clc;
 
-finalTime   = 1000; % simulation time
+finalTime   = 100; % simulation time
 alpha       = 1.0;  % repulsion  distance 
 rho         = 6.0;  % attraction distance 
 w           = 0.5;  % weight factor (direction)
@@ -24,30 +24,24 @@ numReps = 10; % number of repetitions
 elong = zeros(numReps, length(p_list), length(N_list));
 
 % parallel/serial version ?  (uncomment to use)
-% workingVersion();
+workingVersion();
 
 tic % time start 
 disp('simulation start...');
 % start iterating
-for N_idx=1:length(N_list)      % size
+parfor N_idx=1:length(N_list)      % size
     N = N_list(N_idx);
-    % set all in/as function (eventually) for 
-    % efficient parallelization ! 
-    for p_idx=1:length(p_list) % proportion
-        p = p_list(p_idx);
-        for r=1:numReps        % repetitions  
-            elong(r, p_idx, N) = ...
-                                 simulation( finalTime, N, alpha, ... 
-                                             rho, w, s, dt, g, p, ...
-                                             L, theta, pauseTime, ...
-                                             isAnime, isPeriodic );
-        % monitor inner progress
-        disp(['r: ',num2str(r),' p: ', num2str(p_idx)]);                      
-        end                    % repetitions
-    
-    end                        % proportion
     % monitor outer progress
     disp(['step: ', num2str(N_idx), ' out of ', num2str(length(N_list))]);
+    % set all in/as function (eventually) for 
+    % efficient parallelization ! 
+    elong(:, :, N_idx) = ...
+                     parallelFunction( p_list, numReps,     ...
+                                       finalTime, N, alpha, ... 
+                                       rho, w, s, dt, g,    ...
+                                       L, theta, pauseTime, ...
+                                       isAnime, isPeriodic );
+    
 end                            % size
 disp('...simulation end');
 toc % time lapsed 

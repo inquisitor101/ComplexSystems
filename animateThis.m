@@ -1,4 +1,4 @@
-function [] = animateThis(maxInformed, N, L, t, h, Cx, Cy, Xc, Yc, pauseTime, isPeriodic, box)
+function [] = animateThis(maxInformed, N, L, t, h, Cx, Cy, Xc, Yc, pauseTime, isPeriodic, box, elong)
 
 
 for i=1:maxInformed
@@ -48,9 +48,10 @@ plot(box(1,[1:end 1]), box(2,[1:end 1]),'go--', 'linewidth',2)
 % centroid (group) direction
 quiver(Xc(t), Yc(t), cos(h(t+1)), sin(h(t+1)), 'k', 'MaxHeadSize', 1.0 )
 
+
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % debugging here (remove) ------------------------------
-legend(['direction: ', num2str(rad2deg(h(t+1)))]);    
+legend(['elong: ', num2str(elong)]);    
 % debugging here (remove) ------------------------------
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 getframe();

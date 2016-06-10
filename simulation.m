@@ -146,10 +146,10 @@ for t=1:finalTime-1
     
     % % % % % % % % % % % % % % % % % % % % % % % % % % % %
     % step 9: elongation
-    [box, ~] = boundingBox(Cx(:, t+1), Cy(:, t+1), h(t+1));
+    [box, e] = boundingBox(Cx(:, t+1), Cy(:, t+1), h(t+1));
     
     if isAnime
-       animateThis(maxInformed, N, L, t, h, Cx, Cy, Xc, Yc, pauseTime, isPeriodic, box); 
+       animateThis(maxInformed, N, L, t, h, Cx, Cy, Xc, Yc, pauseTime, isPeriodic, box, e); 
     end
 end
 

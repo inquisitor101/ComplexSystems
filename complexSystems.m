@@ -1,15 +1,15 @@
 clear; close; clc;
 
 finalTime   = 100; % simulation time
-alpha       = 1.0;  % repulsion  distance 
+alpha       = 2.0;  % repulsion  distance 
 rho         = 6.0;  % attraction distance 
 w           = 1.0;  % weight factor (direction)
 theta       = 2.0;  % angle threshold
-s           = 0.5;  % speed constant
-dt          = 0.1;  % time step
+s           = 1.0;  % speed constant
+dt          = 0.5;  % time step
 L           = 1.0; % boundary constraint (only if periodic)
 g           = pi/2; % preferred direction 
-pauseTime   = 0.1;  % pause time per animation
+pauseTime   = 0.05;  % pause time per animation
 isAnime     = 1  ;  % animate results ? 1: ON, 0: OFF
 isPeriodic  = 0  ;  % periodic boundaris ? 1: ON, 0: OFF
 

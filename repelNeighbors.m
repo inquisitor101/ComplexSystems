@@ -1,6 +1,6 @@
 function [Dx, Dy] = repelNeighbors(idx, i, Cx, Cy)
 
-idx(idx == i) = 0; % make sure exclude self 
+idx(i) = 0; % make sure exclude self 
 
 tempX = Cx(idx) - Cx(i);
 tempY = Cy(idx) - Cy(i);

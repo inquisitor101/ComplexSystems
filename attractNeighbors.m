@@ -1,6 +1,6 @@
 function [Dx, Dy] = attractNeighbors(idx2, i, Cx, Cy, Vx, Vy)
 
-idx2(idx2 == i) = 0; % make sure exclude self 
+idx2(i) = 0; % make sure exclude self 
 
 tempX = Cx(idx2) - Cx(i);
 tempY = Cy(idx2) - Cy(i);

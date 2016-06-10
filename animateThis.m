@@ -1,4 +1,4 @@
-function [] = animateThis(maxInformed, N, L, t, h, Cx, Cy, Xc, Yc, pauseTime)
+function [] = animateThis(maxInformed, N, L, t, h, Cx, Cy, Xc, Yc, pauseTime, isPeriodic)
 
 
 for i=1:maxInformed
@@ -8,7 +8,9 @@ for i=1:maxInformed
        plot([Cx(i, t), Cx(i, t+1)], ...
             [Cy(i, t), Cy(i, t+1)], ...
             'r-','markersize',4)
-       axis([0 L 0 L]);
+       if isPeriodic
+           axis([0 L 0 L]);
+       end
        hold on
        plot(Cx(i, t+1), Cy(i, t+1), 'r.', ...
                'markersize', 10)
@@ -27,7 +29,9 @@ for i=maxInformed+1:N
        plot([Cx(i, t), Cx(i, t+1)], ...
             [Cy(i, t), Cy(i, t+1)], ...
             'b-','markersize',4)
-       axis([0 L 0 L]);
+       if isPeriodic
+           axis([0 L 0 L]);
+       end
        hold on
        plot(Cx(i, t+1), Cy(i, t+1), 'b.', ...
             'markersize', 10)

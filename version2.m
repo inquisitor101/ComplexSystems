@@ -14,7 +14,7 @@ L           = 10.0;
 theta       = 2.0;
 pauseTime   = 0.0;
 isAnime     = 1;
-isPeriodic  = 1;
+isPeriodic  = 0;
 
 % position
 Cx = zeros(N, finalTime); Cy = zeros(N, finalTime); 
@@ -23,7 +23,7 @@ Vx = zeros(N, finalTime); Vy = zeros(N, finalTime);
 % desired direction
 Dx = zeros(N, finalTime); Dy = zeros(N, finalTime);
 % centroid
-Xc = zeros(finalTime,1);    Yc = zeros(finalTime,1);
+Xc = zeros(finalTime,1);  Yc = zeros(finalTime,1);
 % group direction 
 h  = zeros(finalTime,1);
 
@@ -52,7 +52,7 @@ for t=1:finalTime-1
         else
             xR = Cx(i, t) - Cx(:, t); yR = Cy(i, t) - Cy(:, t);
             xR(i) = 2*rho; yR(i) = 2*rho; % exclude self (no delete)
-            dist = sqrt(xR.^2 + CyR.^2);
+            dist = sqrt(xR.^2 + yR.^2);
         end
         idx  = dist <= alpha;   % repeled indices
         idx2 = dist <= rho;     % attract indices
@@ -88,7 +88,7 @@ for t=1:finalTime-1
         else
             xR = Cx(i, t) - Cx(:, t); yR = Cy(i, t) - Cy(:, t);
             xR(i) = 2*rho; yR(i) = 2*rho; % exclude self (no delete)
-            dist = sqrt(xR.^2 + CyR.^2);
+            dist = sqrt(xR.^2 + yR.^2);
         end
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.7: neighbors
@@ -155,7 +155,7 @@ for t=1:finalTime-1
     
     
     if isAnime
-       animateThis(maxInformed, N, L, t, h, Cx, Cy, Xc, Yc, pauseTime); 
+       animateThis(maxInformed, N, L, t, h, Cx, Cy, Xc, Yc, pauseTime, isPeriodic); 
     end
 end
 

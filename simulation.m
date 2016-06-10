@@ -1,4 +1,4 @@
-function [elong] = simulation(finalTime, N, alpha, rho, w, s, dt, ...
+function [elong, vec] = simulation(finalTime, N, alpha, rho, w, s, dt, ...
                               g, p, L, theta, pauseTime, isAnime, ...
                               isPeriodic)
 
@@ -104,7 +104,7 @@ for t=1:finalTime-1
     % % % % % % % % % % % % % % % % % % % % % % % % % % % %
     % step 3: add noise + update Dx Dy
     angle = atan2( Dy(:, t+1), Dx(:, t+1) );
-    noise = pi/2*gaussianDist([-1, +1], 0.01, N);
+    noise = pi*gaussianDist([-1, +1], 0.01, N);
     angle = angle + noise;
     Dx(:, t+1) = cos(angle); Dy(:, t+1) = sin(angle);
     
@@ -157,5 +157,18 @@ end
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % step 9: elongation
-[box, elong] = boundingBox(Cx(:, end), Cy(:, end), h(end));
+elong = boundingBox(Cx(:, end), Cy(:, end), h(end));
 
+% condition check
+if finalTime < 51
+    error('max time must be at leasat 51 time steps. Change !');
+end
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% step 10: group direction as defined in paper
+rise = Yc(finalTime) - Yc(finalTime-50);
+run  = Xc(finalTime) - Xc(finalTime-50);
+
+vec  = atan2(rise,run);
+% normalize
+vec = vec/(2*pi);

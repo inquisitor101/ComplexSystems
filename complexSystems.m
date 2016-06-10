@@ -1,46 +1,53 @@
 clear; close; clc;
 
-finalTime   = 100; % simulation time
-alpha       = 0.5; % repulsion  distance 
-rho         = 2.0; % attraction distance 
-w           = 0.5; % weight factor
-s           = 0.5; % speed constant
-dt          = 0.1; % time step
-pauseTime   = 0.1; % pause time per animation
-isAnime     = 0  ; % animate results ? 1: ON, 0: OFF
+finalTime   = 1000; % simulation time
+alpha       = 1.0;  % repulsion  distance 
+rho         = 6.0;  % attraction distance 
+w           = 0.5;  % weight factor (direction)
+theta       = 2.0;  % angle threshold
+s           = 0.5;  % speed constant
+dt          = 0.1;  % time step
+L           = 10.0; % boundary constraint (only if periodic)
+g           = pi/2; % preferred direction 
+pauseTime   = 0.1;  % pause time per animation
+isAnime     = 0  ;  % animate results ? 1: ON, 0: OFF
+isPeriodic  = 0  ;  % periodic boundaris ? 1: ON, 0: OFF
 
-% direction preference, properties:
-% g(1): horizontal  (x-axis) 
-% g(2): vertical    (y-axis)
-%  (no change)  0 <= g(#) <= 1  (change direction) 
-g          = [0; 1];       % preferred direction 
 
-N_list     = (1:10)';      % group size list
-p_list     = (0:0.1:1.0)'; % proportion list
+N_list     = [20; 50; 100; 200; 500];      % group size list
+p_list     = (0:0.1:1.0)';                 % proportion list
 
 % repetitions
-numReps = 1; % number of repetitions
+numReps = 10; % number of repetitions
+
+% initialize elongation
+elong = zeros(numReps, length(p_list), length(N_list));
 
 % parallel/serial version ?  (uncomment to use)
 % workingVersion();
 
-
 tic % time start 
 disp('simulation start...');
 % start iterating
-for N=1:length(N_list)      % size
-    
+for N_idx=1:length(N_list)      % size
+    N = N_list(N_idx);
     % set all in/as function (eventually) for 
     % efficient parallelization ! 
     for p_idx=1:length(p_list) % proportion
         p = p_list(p_idx);
-        for r=1:numReps        % repetitions     
-            simulateThis(finalTime, alpha, rho,...
-                         s, dt, p, w, g, N, ...
-                         isAnime, pauseTime);
+        for r=1:numReps        % repetitions  
+            elong(r, p_idx, N) = ...
+                                 simulation( finalTime, N, alpha, ... 
+                                             rho, w, s, dt, g, p, ...
+                                             L, theta, pauseTime, ...
+                                             isAnime, isPeriodic );
+        % monitor inner progress
+        disp(['r: ',num2str(r),' p: ', num2str(p_idx)]);                      
         end                    % repetitions
-    end                        % proportion
     
+    end                        % proportion
+    % monitor outer progress
+    disp(['step: ', num2str(N_idx), ' out of ', num2str(length(N_list))]);
 end                            % size
 disp('...simulation end');
 toc % time lapsed 

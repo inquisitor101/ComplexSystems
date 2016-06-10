@@ -21,9 +21,9 @@ Cx = zeros(N, finalTime); Cy = zeros(N, finalTime);
 % direction vector 
 Vx = zeros(N, finalTime); Vy = zeros(N, finalTime); 
 % centroid
-Xc = zeros(finalTime);    Yc = zeros(finalTime);
+Xc = zeros(finalTime,1);    Yc = zeros(finalTime,1);
 % group direction 
-h  = zeros(finalTime);
+h  = zeros(finalTime,1);
 
 % initialize position  (randomly)
 Cx(:, 1) = 0.25*L*rand(N, 1)+0.375*L; % centered in L-by-L

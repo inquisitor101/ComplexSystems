@@ -20,6 +20,8 @@ isPeriodic  = 1;
 Cx = zeros(N, finalTime); Cy = zeros(N, finalTime); 
 % direction vector 
 Vx = zeros(N, finalTime); Vy = zeros(N, finalTime); 
+% desired direction
+Dx = zeros(N, finalTime); Dy = zeros(N, finalTime);
 % centroid
 Xc = zeros(finalTime,1);    Yc = zeros(finalTime,1);
 % group direction 
@@ -48,7 +50,9 @@ for t=1:finalTime-1
             A = getDistance(i, L, Cx(:, t), Cy(:, t), N);
             dist = nanmin(A);
         else
-            dist = sqrt(Cx(:,t).^2 + Cy(:,t).^2);
+            xR = Cx(i, t) - Cx(:, t); yR = Cy(i, t) - Cy(:, t);
+            xR(i) = 2*rho; yR(i) = 2*rho; % exclude self (no delete)
+            dist = sqrt(xR.^2 + CyR.^2);
         end
         idx  = dist <= alpha;   % repeled indices
         idx2 = dist <= rho;     % attract indices
@@ -82,7 +86,9 @@ for t=1:finalTime-1
             A = getDistance(i, L, Cx(:, t), Cy(:, t), N);
             dist = nanmin(A);
         else
-            dist = sqrt(Cx(:,t).^2 + Cy(:,t).^2);
+            xR = Cx(i, t) - Cx(:, t); yR = Cy(i, t) - Cy(:, t);
+            xR(i) = 2*rho; yR(i) = 2*rho; % exclude self (no delete)
+            dist = sqrt(xR.^2 + CyR.^2);
         end
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.7: neighbors

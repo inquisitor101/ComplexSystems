@@ -1,9 +1,9 @@
-function elong = boundingBox(Cx, Cy, theta)
+function [box, elong] = boundingBox(Cx, Cy, theta)
 
 % 2-vector matrix (to-be rotated)
 matrixIN = [Cx'; Cy'];
 % bounding box initialization
-% box      = zeros(2, 4);
+box      = zeros(2, 4);
 
 % rotation matrix operator
 Roperator = @(theta)[ cos(theta), -sin(theta); 
@@ -26,12 +26,12 @@ M_max = max(matrixOUT)';
 
 
 % complement rotation (step: 2/2)
-% R = R';
+R = R';
   
-% box(:,1) = R*[M_min(1); M_min(2)];
-% box(:,2) = R*[M_min(1); M_max(2)];
-% box(:,3) = R*[M_max(1); M_max(2)];
-% box(:,4) = R*[M_max(1); M_min(2)];
+box(:,1) = R*[M_min(1); M_min(2)];
+box(:,2) = R*[M_min(1); M_max(2)];
+box(:,3) = R*[M_max(1); M_max(2)];
+box(:,4) = R*[M_max(1); M_min(2)];
 
 
 elong = (M_max(1) - M_min(1)) /...

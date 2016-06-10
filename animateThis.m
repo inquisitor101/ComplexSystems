@@ -1,4 +1,4 @@
-function [] = animateThis(maxInformed, N, L, t, h, Cx, Cy, Xc, Yc, pauseTime, isPeriodic)
+function [] = animateThis(maxInformed, N, L, t, h, Cx, Cy, Xc, Yc, pauseTime, isPeriodic, box)
 
 
 for i=1:maxInformed
@@ -43,6 +43,9 @@ for i=maxInformed+1:N
    end
 end
 
+% bounding box
+plot(box(1,[1:end 1]), box(2,[1:end 1]),'go--', 'linewidth',2)
+% centroid (group) direction
 quiver(Xc(t), Yc(t), cos(h(t+1)), sin(h(t+1)), 'k', 'MaxHeadSize', 1.0 )
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % %

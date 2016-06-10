@@ -10,12 +10,12 @@ dt          = 0.1;  % time step
 L           = 1.0; % boundary constraint (only if periodic)
 g           = pi/2; % preferred direction 
 pauseTime   = 0.1;  % pause time per animation
-isAnime     = 0  ;  % animate results ? 1: ON, 0: OFF
+isAnime     = 1  ;  % animate results ? 1: ON, 0: OFF
 isPeriodic  = 0  ;  % periodic boundaris ? 1: ON, 0: OFF
 
 
-N_list     = [20; 50; 100; 200; 500];      % group size list
-p_list     = (0:0.1:1.0)';                 % proportion list
+N_list     = 20;%[20; 50; 100; 200; 500];      % group size list
+p_list     = (0.1:0.1:1.0)';                 % proportion list
 
 % repetitions
 numReps = 10; % number of repetitions

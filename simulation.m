@@ -20,8 +20,8 @@ h  = zeros(finalTime,1);
 Cx(:, 1) = 0.25*L*rand(N, 1)+0.375*L; % centered in L-by-L
 Cy(:, 1) = 0.25*L*rand(N, 1)+0.375*L; % centered in L-by-L
 % initialize direction (randomly)
-Vx(:, 1) = 2*pi*rand(N, 1);
-Vy(:, 1) = 2*pi*rand(N, 1);
+Vx(:, 1) = rand(N, 1);
+Vy(:, 1) = rand(N, 1);
 % initialize centroids
 Xc(1) = mean(Cx(:, 1)); Yc(1) = mean(Cy(:, 1));
 
@@ -59,11 +59,10 @@ for t=1:finalTime-1
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.3: normalize 
         D = atan2(Dy(i, t+1), Dx(i, t+1) ); % convert to angle
-        D = D/(2*pi);  % normalize using 2*pi
+        D = D/sqrt(Dx(i, t+1)^2 + Dy(i, t+1)^2);  % normalize using 2*pi
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.4: normalize using preferred direction
         D = D + w*g;
-        D = D/(2*pi);
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.5: update Dx Dy
         Dx(i, t+1) = cos(D); Dy(i, t+1) = sin(D);
@@ -95,7 +94,7 @@ for t=1:finalTime-1
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.8: normalize 
         D = atan2(Dy(i, t+1), Dx(i, t+1) ); % convert to angle
-        D = D/(2*pi);  % normalize using 2*pi 
+%         D = D/sqrt(Dx(i, t+1)^2 + Dy(i, t+1)^2);  % normalize using 2*pi 
         % % % % % % % % % % % % % % % % % % % % % % % % % % % 
         % step 2.9: update Dx Dy
         Dx(i, t+1) = cos(D); Dy(i, t+1) = sin(D);
@@ -104,7 +103,7 @@ for t=1:finalTime-1
     % % % % % % % % % % % % % % % % % % % % % % % % % % % %
     % step 3: add noise + update Dx Dy
     angle = atan2( Dy(:, t+1), Dx(:, t+1) );
-    noise = pi*gaussianDist([-1, +1], 0.01, N);
+    noise = pi/2*gaussianDist([-1, +1], 0.01, N);
     angle = angle + noise;
     Dx(:, t+1) = cos(angle); Dy(:, t+1) = sin(angle);
     
@@ -145,9 +144,12 @@ for t=1:finalTime-1
         Cy(:, t+1) = mod( Cy(:, t+1), L); % vertical   boundary
     end
     
+    % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+    % step 9: elongation
+    [box, ~] = boundingBox(Cx(:, t+1), Cy(:, t+1), h(t+1));
     
     if isAnime
-       animateThis(maxInformed, N, L, t, h, Cx, Cy, Xc, Yc, pauseTime, isPeriodic); 
+       animateThis(maxInformed, N, L, t, h, Cx, Cy, Xc, Yc, pauseTime, isPeriodic, box); 
     end
 end
 
@@ -156,8 +158,8 @@ if isAnime
 end
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% step 9: elongation
-elong = boundingBox(Cx(:, end), Cy(:, end), h(end));
+% step 10: elongation
+[~, elong] = boundingBox(Cx(:, end), Cy(:, end), h(end));
 
 % condition check
 if finalTime < 51
@@ -170,5 +172,4 @@ rise = Yc(finalTime) - Yc(finalTime-50);
 run  = Xc(finalTime) - Xc(finalTime-50);
 
 vec  = atan2(rise,run);
-% normalize
-vec = vec/(2*pi);
+

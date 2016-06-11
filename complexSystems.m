@@ -90,8 +90,8 @@ colorbar
 colormap('parula')
 set(gca,'YDir','normal')
 set(gca,'fontsize',14)
-xlabel('b')
-ylabel('A_T')
+xlabel('p')
+ylabel('accuracy')
 
 %% session is over
 delete(gcp);

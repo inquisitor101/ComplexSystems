@@ -54,15 +54,6 @@ toc % time lapsed
 %% Plot average accuracy
 %Sv = mean(vec,1) - g;
 figure(1)
-% clf()
-% Sa = 1 - mean(acc,1)/sqrt(2);
-% hold on
-% plot(p_list,Sa(1,:,1))
-% plot(p_list,Sa(1,:,2))
-% plot(p_list,Sa(1,:,3))
-% plot(p_list,Sa(1,:,4))
-% xlabel('accuracy')
-% hold off
 clf()
 Sa = 1 - mean( abs(g-vec) );
 hold on
@@ -81,7 +72,10 @@ ylabel('elongation')
 
 %% Try #2 - elongation curve
 figure(3)
-
+Se = mean(elong, 1); % average of repetitions
+Se = squeeze(Se);    % get rid of singular dimension
+plot(p_list, Se) % here goes nothing...
+ylabel('elongation')
 
 %% session is over
 delete(gcp);

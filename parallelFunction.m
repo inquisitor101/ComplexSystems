@@ -9,7 +9,7 @@ elong = zeros(numReps, length(p_list));
 vec   = zeros(numReps, length(p_list));
 acc   = zeros(numReps, length(p_list));
 
-for p_idx=1:length(p_list) % proportion
+parfor p_idx=1:length(p_list) % proportion
     p = p_list(p_idx);
     for r=1:numReps        % repetitions  
         [elong(r, p_idx), vec(r, p_idx), acc(r, p_idx)] = ...

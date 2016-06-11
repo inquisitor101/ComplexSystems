@@ -1,4 +1,4 @@
-function [elong, vec] = simulation(finalTime, N, alpha, rho, w, s, dt, ...
+function [elong, vec, acc] = simulation(finalTime, N, alpha, rho, w, s, dt, ...
                               g, p, L, theta, pauseTime, isAnime, ...
                               isPeriodic)
 
@@ -59,7 +59,7 @@ for t=1:finalTime-1
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.3: normalize 
         D = atan2(Dy(i, t+1), Dx(i, t+1) ); % convert to angle
-        D = D/sqrt(Dx(i, t+1)^2 + Dy(i, t+1)^2);  % normalize using 2*pi
+        %D = D/sqrt(Dx(i, t+1)^2 + Dy(i, t+1)^2);  % normalize using 2*pi
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.4: normalize using preferred direction
         D = D + w*g;
@@ -167,9 +167,13 @@ if finalTime < 51
 end
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-% step 10: group direction as defined in paper
+% step 11: group direction as defined in paper
 rise = Yc(finalTime) - Yc(finalTime-50);
 run  = Xc(finalTime) - Xc(finalTime-50);
 
 vec  = atan2(rise,run);
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% step 12: group accuracy
+acc = sqrt(sum(2*(1-cos(atan2(Vy(:,end),Vx(:,end)) - g)))/(2*N));
 

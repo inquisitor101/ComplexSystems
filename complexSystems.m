@@ -1,4 +1,5 @@
-clear; close; clc;
+clear; clc;
+%close;
 
 finalTime   = 100; % simulation time
 alpha       = 2.0;  % repulsion  distance 
@@ -10,11 +11,11 @@ dt          = 0.5;  % time step
 L           = 1.0; % boundary constraint (only if periodic)
 g           = pi/2; % preferred direction 
 pauseTime   = 0.05;  % pause time per animation
-isAnime     = 1  ;  % animate results ? 1: ON, 0: OFF
+isAnime     = 0  ;  % animate results ? 1: ON, 0: OFF
 isPeriodic  = 0  ;  % periodic boundaris ? 1: ON, 0: OFF
 
 
-N_list     = 20;%[20; 50; 100; 200; 500];      % group size list
+N_list     = [20; 50; 100];      % group size list
 p_list     = (0.1:0.1:1.0)';                 % proportion list
 
 % repetitions
@@ -24,6 +25,8 @@ numReps = 10; % number of repetitions
 elong = zeros(numReps, length(p_list), length(N_list));
 % initialize group direction
 vec   = zeros(numReps, length(p_list), length(N_list));
+% initialise accuracy
+acc   = zeros(numReps, length(p_list), length(N_list));
 
 % parallel/serial version ?  (uncomment to use)
 workingVersion();
@@ -31,13 +34,13 @@ workingVersion();
 tic % time start 
 disp('simulation start...');
 % start iterating
-parfor N_idx=1:length(N_list)      % size
+for N_idx=1:length(N_list)      % size
     N = N_list(N_idx);
     % monitor outer progress
     disp(['step: ', num2str(N_idx), ' out of ', num2str(length(N_list))]);
     % set all in/as function (eventually) for 
     % efficient parallelization ! 
-    [elong(:, :, N_idx), vec(:, :, N_idx)] = ...
+    [elong(:, :, N_idx), vec(:, :, N_idx), acc(:, :, N_idx)] = ...
                      parallelFunction( p_list, numReps,     ...
                                        finalTime, N, alpha, ... 
                                        rho, w, s, dt, g,    ...
@@ -48,6 +51,10 @@ end                            % size
 disp('...simulation end');
 toc % time lapsed 
 
+% Plot average accuracy
+figure(1)
+S = mean(acc,1);
+plot(p_list,S(1,:,3))
 
 % session is over
 delete(gcp);

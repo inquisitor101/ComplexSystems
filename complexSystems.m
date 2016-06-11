@@ -76,6 +76,23 @@ Se = squeeze(Se);    % get rid of singular dimension
 plot(p_list, Se) % here goes nothing...
 ylabel('elongation')
 
+%% Create Histogram
+% create histogram
+H = hist(squeeze(Sa)',10);
+H = H./numReps;
+
+clf;
+figure(4)
+%axis([0 1 0 1])
+clims = [0 0.5];
+imagesc([0 1],[0 1],H,clims)
+colorbar
+colormap('parula')
+set(gca,'YDir','normal')
+set(gca,'fontsize',14)
+xlabel('b')
+ylabel('A_T')
+
 %% session is over
 delete(gcp);
 

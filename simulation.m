@@ -106,10 +106,10 @@ for t=1:finalTime-1
     
     % % % % % % % % % % % % % % % % % % % % % % % % % % % %
     % step 3: add noise + update Dx Dy
-%     angle = atan2( Dy(:, t+1), Dx(:, t+1) );
-%     noise = pi/2*gaussianDist([-1, +1], 0.01, N);
-%     angle = angle + noise;
-%     Dx(:, t+1) = cos(angle); Dy(:, t+1) = sin(angle);
+    angle = atan2( Dy(:, t+1), Dx(:, t+1) );
+    noise = gaussianDist(0.01, N);
+    angle = angle + noise;
+    Dx(:, t+1) = cos(angle); Dy(:, t+1) = sin(angle);
     
     % % % % % % % % % % % % % % % % % % % % % % % % % % % %
     % step 4: update Vx Vy

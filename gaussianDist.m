@@ -1,16 +1,8 @@
-function out = gaussianDist(range, stdDev, N)
+function out = gaussianDist(SD, N)
 
-out = zeros(N, 1); % make sure its an N-by-1
+% SD: standard deviation
+% mu: mean/average
 
-% step 1: generate numbers
-a = range(1); 
-b = range(2);
-x = a + (b-a)*rand(N, 1);
-mu = (a+b)/2; 
+mu = 0;
+out = normrnd(mu, SD, [N, 1]);
 
-% step 2: gaussian function
-coef1 = 1.0/( stdDev*sqrt(2*pi) );
-coef2 = ( (x - mu)/stdDev );
-coef2 = coef2.*coef2;
-
-out = coef1.*exp(-coef2/2);

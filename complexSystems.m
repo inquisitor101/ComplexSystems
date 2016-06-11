@@ -16,7 +16,7 @@ isPeriodic  = 0  ;  % periodic boundaris ? 1: ON, 0: OFF
 
 
 N_list     = [10; 30; 50; 100];      % group size list
-p_list     = (0.1:0.1:1.0)';                 % proportion list
+p_list     = (0.05:0.05:1.0)';       % proportion list
 
 % repetitions
 numReps = 10; % number of repetitions
@@ -93,6 +93,11 @@ set(gca,'YDir','normal')
 set(gca,'fontsize',14)
 xlabel('p')
 ylabel('accuracy')
+
+%% Plot direction changes
+figure(5)
+h = rad2deg(vec);
+plot(p_list, squeeze(h(numReps, :, :)), 'kx')
 
 %% session is over
 delete(gcp);

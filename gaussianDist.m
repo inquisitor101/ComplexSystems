@@ -4,5 +4,5 @@ function out = gaussianDist(SD, N)
 % mu: mean/average
 
 mu = 0;
-out = normrnd(mu, SD, [N, 1]);
+out = SD.*randn(N,1) + mu;
 

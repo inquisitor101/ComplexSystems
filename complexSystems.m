@@ -54,7 +54,7 @@ toc % time lapsed
 %% Plot average accuracy
 figure(1)
 clf()
-Sa = 1 - mean( abs(g-vec) );
+Sa = 1 - mean( abs(g-vec) )/sqrt(2);
 hold on
 plot(p_list,Sa(1,:,1))
 plot(p_list,Sa(1,:,2))

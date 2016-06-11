@@ -34,7 +34,7 @@ workingVersion();
 tic % time start 
 disp('simulation start...');
 % start iterating
-for N_idx=1:length(N_list)      % size
+parfor N_idx=1:length(N_list)      % size
     N = N_list(N_idx);
     % monitor outer progress
     disp(['step: ', num2str(N_idx), ' out of ', num2str(length(N_list))]);
@@ -54,8 +54,17 @@ toc % time lapsed
 %% Plot average accuracy
 %Sv = mean(vec,1) - g;
 figure(1)
-clf
-Sa = 1 - mean(acc,1)/sqrt(2);
+% clf()
+% Sa = 1 - mean(acc,1)/sqrt(2);
+% hold on
+% plot(p_list,Sa(1,:,1))
+% plot(p_list,Sa(1,:,2))
+% plot(p_list,Sa(1,:,3))
+% plot(p_list,Sa(1,:,4))
+% xlabel('accuracy')
+% hold off
+clf()
+Sa = 1 - mean( abs(g-vec) );
 hold on
 plot(p_list,Sa(1,:,1))
 plot(p_list,Sa(1,:,2))
@@ -65,9 +74,14 @@ hold off
 
 %% Plot average elongation
 figure(2)
-clf
+clf()
 Se = mean(elong,1);
 plot(p_list,Se(1,:,3))
+ylabel('elongation')
+
+%% Try #2 - elongation curve
+figure(3)
+
 
 %% session is over
 delete(gcp);

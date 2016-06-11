@@ -161,9 +161,6 @@ if isAnime
     clf()
 end
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% step 10: elongation
-[~, elong] = boundingBox(Cx(:, end), Cy(:, end), h(end));
 
 % condition check
 if finalTime < 51
@@ -171,11 +168,16 @@ if finalTime < 51
 end
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-% step 11: group direction as defined in paper
+% step 10: group direction as defined in paper
 rise = Yc(finalTime) - Yc(finalTime-50);
 run  = Xc(finalTime) - Xc(finalTime-50);
 
 vec  = atan2(rise,run);
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% step 11: elongation
+[~, elong] = boundingBox(Cx(:, end), Cy(:, end), vec);
+
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % step 12: group accuracy

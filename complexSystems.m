@@ -78,13 +78,14 @@ ylabel('elongation')
 
 %% Create Histogram
 % create histogram
-H = hist(squeeze(Sa)',10);
+Sh= 1 - abs(g-vec)/sqrt(2);
+H = hist(Sh(:,:,1),25);
 H = H./numReps;
 
 clf;
 figure(4)
 %axis([0 1 0 1])
-clims = [0 0.5];
+clims = [0 0.25];
 imagesc([0 1],[0 1],H,clims)
 colorbar
 colormap('parula')

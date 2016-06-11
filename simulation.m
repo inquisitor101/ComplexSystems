@@ -59,13 +59,17 @@ for t=1:finalTime-1
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.3: normalize 
         D = atan2(Dy(i, t+1), Dx(i, t+1) ); % convert to angle
+        Dx(i, t+1) = cos(D); Dy(i, t+1) = sin(D);
         %D = D/sqrt(Dx(i, t+1)^2 + Dy(i, t+1)^2);  % normalize using 2*pi
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.4: normalize using preferred direction
-        D = D + w*g;
+        Dx = Dx + w*cos(g);
+        Dy = Dy + w*sin(g);
+        D = atan2(Dy(i, t+1), Dx(i, t+1) ); % convert to angle
+        Dx(i, t+1) = cos(D); Dy(i, t+1) = sin(D);
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.5: update Dx Dy
-        Dx(i, t+1) = cos(D); Dy(i, t+1) = sin(D);
+        %Dx(i, t+1) = cos(D); Dy(i, t+1) = sin(D);
     end
     for i=maxInformed+1:N
         
@@ -102,10 +106,10 @@ for t=1:finalTime-1
     
     % % % % % % % % % % % % % % % % % % % % % % % % % % % %
     % step 3: add noise + update Dx Dy
-    angle = atan2( Dy(:, t+1), Dx(:, t+1) );
-    noise = pi/2*gaussianDist([-1, +1], 0.01, N);
-    angle = angle + noise;
-    Dx(:, t+1) = cos(angle); Dy(:, t+1) = sin(angle);
+%     angle = atan2( Dy(:, t+1), Dx(:, t+1) );
+%     noise = pi/2*gaussianDist([-1, +1], 0.01, N);
+%     angle = angle + noise;
+%     Dx(:, t+1) = cos(angle); Dy(:, t+1) = sin(angle);
     
     % % % % % % % % % % % % % % % % % % % % % % % % % % % %
     % step 4: update Vx Vy

@@ -2,20 +2,20 @@ clear; clc;
 %close;
 
 finalTime   = 100; % simulation time
-alpha       = 2.0;  % repulsion  distance 
+alpha       = 1.0;  % repulsion  distance 
 rho         = 6.0;  % attraction distance 
-w           = 1.0;  % weight factor (direction)
+w           = 0.5;  % weight factor (direction)
 theta       = 2.0;  % angle threshold
 s           = 1.0;  % speed constant
-dt          = 0.5;  % time step
+dt          = 0.2;  % time step
 L           = 1.0; % boundary constraint (only if periodic)
-g           = pi/2; % preferred direction 
+g           = pi/3; % preferred direction 
 pauseTime   = 0.05;  % pause time per animation
 isAnime     = 0  ;  % animate results ? 1: ON, 0: OFF
 isPeriodic  = 0  ;  % periodic boundaris ? 1: ON, 0: OFF
 
 
-N_list     = [20; 50; 100];      % group size list
+N_list     = [10; 30; 50; 100];      % group size list
 p_list     = (0.1:0.1:1.0)';                 % proportion list
 
 % repetitions
@@ -51,12 +51,25 @@ end                            % size
 disp('...simulation end');
 toc % time lapsed 
 
-% Plot average accuracy
+%% Plot average accuracy
+%Sv = mean(vec,1) - g;
 figure(1)
-S = mean(acc,1);
-plot(p_list,S(1,:,3))
+clf
+Sa = 1 - mean(acc,1)/sqrt(2);
+hold on
+plot(p_list,Sa(1,:,1))
+plot(p_list,Sa(1,:,2))
+plot(p_list,Sa(1,:,3))
+plot(p_list,Sa(1,:,4))
+hold off
 
-% session is over
+%% Plot average elongation
+figure(2)
+clf
+Se = mean(elong,1);
+plot(p_list,Se(1,:,3))
+
+%% session is over
 delete(gcp);
 
 

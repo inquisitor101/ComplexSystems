@@ -17,5 +17,5 @@ else
     end
     ps = parallel.Settings;
     ps.Pool.AutoCreate = false;
-    disp('Serial Verion ON');
+    disp('Serial Version ON');
 end

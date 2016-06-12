@@ -1,10 +1,12 @@
 function [elong, vec, acc] = simulation(finalTime, N, alpha, rho, w, s, dt, ...
                               g, p, L, theta, pauseTime, isAnime, ...
-                              isPeriodic)
+                              isPeriodic, b, infant_alpha)
 
 
 % total informed population
 maxInformed = round(N*p);
+% total infant population
+maxInfants = round(N*b);
 % position
 Cx = zeros(N, finalTime); Cy = zeros(N, finalTime); 
 % direction vector 
@@ -44,8 +46,9 @@ for t=1:finalTime-1
             xR(i) = 2*rho; yR(i) = 2*rho; % exclude self (no delete)
             dist = sqrt(xR.^2 + yR.^2);
         end
-        idx  = dist <= alpha;   % repeled indices
-        idx2 = dist <= rho;     % attract indices
+        % ignore infants
+        idx  = dist(1:N-maxInfants) <= alpha;   % repeled indices
+        idx2 = dist(1:N-maxInfants) <= rho;     % attract indices
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.2: neighbors
         if sum(idx) ~= 0       % repel
@@ -71,7 +74,7 @@ for t=1:finalTime-1
         % step 2.5: update Dx Dy
         %Dx(i, t+1) = cos(D); Dy(i, t+1) = sin(D);
     end
-    for i=maxInformed+1:N
+    for i=maxInformed+1:N-maxInfants
         
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.6: distance 
@@ -83,8 +86,9 @@ for t=1:finalTime-1
             xR(i) = 2*rho; yR(i) = 2*rho; % exclude self (no delete)
             dist = sqrt(xR.^2 + yR.^2);
         end
-        idx  = dist <= alpha;   % repeled indices
-        idx2 = dist <= rho;     % attract indices
+        % ignore infants
+        idx  = dist(1:N-maxInfants) <= alpha;   % repeled indices
+        idx2 = dist(1:N-maxInfants) <= rho;     % attract indices
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.7: neighbors
         if sum(idx) ~= 0       % repel
@@ -101,6 +105,39 @@ for t=1:finalTime-1
 %         D = D/sqrt(Dx(i, t+1)^2 + Dy(i, t+1)^2);  % normalize using 2*pi 
         % % % % % % % % % % % % % % % % % % % % % % % % % % % 
         % step 2.9: update Dx Dy
+        Dx(i, t+1) = cos(D); Dy(i, t+1) = sin(D);
+    end
+    for i=N-maxInfants+1:N
+        % infants have an alpha value close to zero
+        % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+        % step 2.10: distance 
+        if isPeriodic
+            A = getDistance(i, L, Cx(:, t), Cy(:, t), N);
+            dist = nanmin(A);
+        else
+            xR = Cx(:, t) - Cx(i, t); yR = Cy(:, t) - Cy(i, t);
+            xR(i) = 2*rho; yR(i) = 2*rho; % exclude self (no delete)
+            dist = sqrt(xR.^2 + yR.^2);
+        end
+        % infants consider other infants
+        idx  = dist <= infant_alpha;   % repeled indices
+        idx2 = dist <= rho;     % attract indices
+        % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+        % step 2.11: neighbors
+        if sum(idx) ~= 0       % repel
+            
+            [Dx(i, t+1), Dy(i, t+1)] = repelNeighbors  (idx, i, Cx(:, t), Cy(:, t) );
+        
+        elseif sum(idx2) ~= 0  % attract
+            
+            [Dx(i, t+1), Dy(i, t+1)] = attractNeighbors(idx2, i, Cx(:, t), Cy(:, t),  Vx(:, t), Vy(:, t) );
+        end
+        % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+        % step 2.12: normalize 
+        D = atan2(Dy(i, t+1), Dx(i, t+1) ); % convert to angle
+%         D = D/sqrt(Dx(i, t+1)^2 + Dy(i, t+1)^2);  % normalize using 2*pi 
+        % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+        % step 2.13: update Dx Dy
         Dx(i, t+1) = cos(D); Dy(i, t+1) = sin(D);
     end
     

@@ -1,22 +1,24 @@
 clear; clc;
 %close;
 
-finalTime   = 100; % simulation time
-alpha       = 1.0;  % repulsion  distance 
-rho         = 6.0;  % attraction distance 
-w           = 0.5;  % weight factor (direction)
-theta       = 2.0;  % angle threshold
-s           = 1.0;  % speed constant
-dt          = 0.2;  % time step
-L           = 1.0; % boundary constraint (only if periodic)
-g           = pi/2; % preferred direction 
-pauseTime   = 0.05;  % pause time per animation
-isAnime     = 0  ;  % animate results ? 1: ON, 0: OFF
-isPeriodic  = 0  ;  % periodic boundaris ? 1: ON, 0: OFF
+finalTime    = 100; % simulation time
+alpha        = 1.0; % repulsion distance
+infant_alpha = 0.0; % infant repulsion distance (model extension)
+b            = 0.5; % infant proportion (model extension)
+rho          = 6.0; % attraction distance 
+w            = 0.5; % weight factor (direction)
+theta        = 2.0; % angle threshold
+s            = 1.0; % speed constant
+dt           = 0.2; % time step
+L            = 1.0; % boundary constraint (only if periodic)
+g            = pi/2; % preferred direction 
+pauseTime    = 0.05; % pause time per animation
+isAnime      = 0  ; % animate results ? 1: ON, 0: OFF
+isPeriodic   = 0  ; % periodic boundaris ? 1: ON, 0: OFF
 
 
 N_list     = [10; 30; 50; 100];      % group size list
-p_list     = (0.05:0.05:1.0)';       % proportion list
+p_list     = (0.05:0.05:1.0-b)';     % proportion list
 
 % repetitions
 numReps = 10; % number of repetitions
@@ -29,7 +31,7 @@ vec   = zeros(numReps, length(p_list), length(N_list));
 acc   = zeros(numReps, length(p_list), length(N_list));
 
 % parallel/serial version ?  (uncomment to use)
-workingVersion();
+%workingVersion();
 
 tic % time start 
 disp('simulation start...');
@@ -45,7 +47,8 @@ for N_idx=1:length(N_list)      % size
                                        finalTime, N, alpha, ... 
                                        rho, w, s, dt, g,    ...
                                        L, theta, pauseTime, ...
-                                       isAnime, isPeriodic );
+                                       isAnime, isPeriodic, ...
+                                       b, infant_alpha);
     
 end                            % size
 disp('...simulation end');

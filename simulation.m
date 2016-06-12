@@ -66,8 +66,8 @@ for t=1:finalTime-1
         %D = D/sqrt(Dx(i, t+1)^2 + Dy(i, t+1)^2);  % normalize using 2*pi
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % step 2.4: normalize using preferred direction
-        Dx = Dx + w*cos(g);
-        Dy = Dy + w*sin(g);
+        Dx(i, t+1) = Dx(i, t+1) + w*cos(g);
+        Dy(i, t+1) = Dy(i, t+1) + w*sin(g);
         D = atan2(Dy(i, t+1), Dx(i, t+1) ); % convert to angle
         Dx(i, t+1) = cos(D); Dy(i, t+1) = sin(D);
         % % % % % % % % % % % % % % % % % % % % % % % % % % % %

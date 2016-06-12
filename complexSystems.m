@@ -4,7 +4,7 @@ clear; clc;
 finalTime    = 100; % simulation time
 alpha        = 1.0; % repulsion distance
 infant_alpha = 0.0; % infant repulsion distance (model extension)
-b            = 0.5; % infant proportion (model extension)
+b            = 0.0; % infant proportion (model extension)
 rho          = 6.0; % attraction distance 
 w            = 0.5; % weight factor (direction)
 theta        = 2.0; % angle threshold
@@ -68,8 +68,13 @@ hold off
 %% Plot average elongation
 figure(2)
 clf()
+hold on
 Se = mean(elong,1);
-plot(p_list,Se(1,:,3))
+plot(p_list,Se(1,:,1)./Se(1,1,1))
+plot(p_list,Se(1,:,2)./Se(1,1,2))
+plot(p_list,Se(1,:,3)./Se(1,1,3))
+plot(p_list,Se(1,:,4)./Se(1,1,4))
+hold off
 ylabel('elongation')
 
 %% Try #2 - elongation curve
@@ -85,8 +90,8 @@ Sh= 1 - abs(g-vec)/sqrt(2);
 H = hist(Sh(:,:,1),25);
 H = H./numReps;
 
-clf;
 figure(4)
+clf;
 %axis([0 1 0 1])
 clims = [0 0.25];
 imagesc([0 1],[0 1],H,clims)
